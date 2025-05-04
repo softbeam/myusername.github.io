@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>실시간 인기 검색어</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f9f9f9; }
+    .trend { margin: 10px 0; padding: 10px; border-bottom: 1px solid #ddd; }
+    h2 { color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <h2>Google 실시간 인기 검색어 (한국)</h2>
+  <div id="trends">로딩 중...</div>
+
+  <script>
+    async function fetchTrends() {
+      const container = document.getElementById('trends');
+      try {
+        // 자체 프록시 서버 URL (예: Node.js 서버)
+        const response = await fetch('https://your-proxy-server.com/trends');
+        const data = await response.json();
+        
+        // 데이터 표시
+        container.innerHTML = data.map(item => {
+          const title = item.title || '제목 없음';
+          const traffic = item['ht:approx_traffic']?.[0] || '정보 없음';
+          return `<div class="trend">
+                    <strong>${title}</strong><br>
+                    <small>검색량: ${traffic}</small>
+                  </div>`;
+        }).join('');
+      } catch (error) {
+        container.textContent = '데이터를 불러오지 못했습니다.';
+      }
+    }
+
+    fetchTrends();
+  </script>
+</body>
+</html>
